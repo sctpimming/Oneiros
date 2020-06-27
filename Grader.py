@@ -8,6 +8,7 @@ def Grading(filename, testcase_num = 10, timelimit = 1):
     stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
     output, err = process.communicate()
     if process.returncode != 0:
+        # sp.run(f"del {filename}.exe", shell=True, cwd = "code")
         return "\nCompliation Error\n" + err
     
     result = []
@@ -21,6 +22,7 @@ def Grading(filename, testcase_num = 10, timelimit = 1):
                 output, err = process.communicate(timeout=timelimit, input=f.read())
             runtime = time.time() - start
         except sp.TimeoutExpired:
+            process.kill()
             verdict = "T"
             runtime = timelimit
             result.append([verdict, runtime])
@@ -29,7 +31,6 @@ def Grading(filename, testcase_num = 10, timelimit = 1):
             verdict = "X"
             result.append([verdict, runtime])
             continue
-        
         with open(f"solution/{testcase}.sol") as f:
             expect_output = [item for item in f.read().strip().split()]
         user_output = [item for item in output.strip().split()]
