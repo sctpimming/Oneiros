@@ -3,6 +3,7 @@ import time
 import os
 
 def Grading(filename, testcase_num = 10, timelimit = 1):
+    filename = f"code/{filename}"
     process = sp.Popen(['g++', '-O2', f"{filename}.cpp",'-o', filename], 
     stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
     output, err = process.communicate()
@@ -16,7 +17,7 @@ def Grading(filename, testcase_num = 10, timelimit = 1):
         start = time.time()
         process = sp.Popen(filename, stdout=sp.PIPE, stdin=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
         try:
-            with open(f"{testcase}.in") as f:
+            with open(f"input/{testcase}.in") as f:
                 output, err = process.communicate(timeout=timelimit, input=f.read())
             runtime = time.time() - start
         except sp.TimeoutExpired:
@@ -29,7 +30,7 @@ def Grading(filename, testcase_num = 10, timelimit = 1):
             result.append([verdict, runtime])
             continue
         
-        with open(f"{testcase}.sol") as f:
+        with open(f"solution/{testcase}.sol") as f:
             expect_output = [item for item in f.read().strip().split()]
         user_output = [item for item in output.strip().split()]
 
